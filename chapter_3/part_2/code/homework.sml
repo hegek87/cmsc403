@@ -43,6 +43,44 @@ fun findMaxMinInput() =
 		find_min_max x
 	end;
 	
+(* 3.8 (e) *)
+fun 	find piv [] = 0 |
+	find piv (x::xs) = if x = piv then 0 else 1+find piv xs;
+	
+	(*
+fun	quicksort [] = [] : int list|
+	quicksort lis =
+		let 	val piv = hd lis
+			val partitioned = pivot lis
+			val pivNum = find piv lis
+			val front = List.take(lis,pivNum)
+			val back = List.drop(lis,pivNum)
+		in
+			partitioned
+		end;*)
+
+(* 3.8 (f) *)
+fun 	merge l1 [] = l1 |
+	merge [] l2 = l2 |
+	merge (x::xs) (y::ys) = 
+		if x > y then y::merge (x::xs) ys
+		else x::merge xs (y::ys);
+		
+fun len [] = 0 | len (x::xs) = 1 + len xs;
+
+fun 	mergesort [] = [] |
+	mergesort (x::[]) = [x] |
+	mergesort lis =
+		let 	val mid = len lis div 2
+			val front = List.take(lis, mid)
+			val back = List.drop(lis, mid)
+		in
+			merge (mergesort front) (mergesort back)
+		end;
+		
+
+	
+	
 (* 3.8 (h) *)
 fun twice f = fn x => f(f(x));
 fun square x = x*x;
