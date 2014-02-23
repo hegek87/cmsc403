@@ -18,18 +18,31 @@ fun min(L,m) =
 	
 fun find_min_max(L) = [min(L,hd(L)),max(L,hd(L))];
 
-(* 3.8 (b) *)
+(* 3.8 (c) *)
 
 fun getInput() = 
-	inputLine(stdIn);
-	(*
-fun buildList() = 
-	let val y = getInput()
-	in
-		y*2
-	end;*)
+	let 	val y = inputLine(stdIn)
+		val x = substring(valOf y,0,size(valOf y)-1)
+		val z = valOf(Int.fromString x)
+	in 
+		if z = 0 then [] else z::getInput()
+	end;
 	
+(* 3.8 (d) *)
+fun printList(nil) = ()
+|	printList(x::xs) = (
+		print(Int.toString(x));
+		print("\n");
+		printList(xs)
+	);
+	
+fun findMaxMinInput() = 
+	let val x = getInput()
+	in
+		printList x;
+		find_min_max x
+	end;
+	
+(* 3.8 (h) *)
 fun twice f = fn x => f(f(x));
 fun square x = x*x;
-
-twice(square)(5);
