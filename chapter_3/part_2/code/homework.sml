@@ -44,20 +44,19 @@ fun findMaxMinInput() =
 	end;
 	
 (* 3.8 (e) *)
-fun 	find piv [] = 0 |
-	find piv (x::xs) = if x = piv then 0 else 1+find piv xs;
-	
-	(*
-fun	quicksort [] = [] : int list|
-	quicksort lis =
-		let 	val piv = hd lis
-			val partitioned = pivot lis
-			val pivNum = find piv lis
-			val front = List.take(lis,pivNum)
-			val back = List.drop(lis,pivNum)
+(* quick sort. We take the first element is a pivot and partition the set based on this first element, then we will recursively call quicksort on the two halves *)
+fun 	partition piv f b [] = (f,b) |
+	partition piv f b (x::xs) =
+		if piv > x then partition piv (x::f) b xs
+		else partition piv f (x::b) xs;
+		
+fun 	quicksort [] = [] |
+	quicksort (x::xs) =
+		let val (front, back) = partition x [][] xs
 		in
-			partitioned
-		end;*)
+			quicksort front @ [x] @ quicksort back
+		end;
+				
 
 (* 3.8 (f) *)
 fun 	merge l1 [] = l1 |
