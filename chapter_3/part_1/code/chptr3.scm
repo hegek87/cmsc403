@@ -166,7 +166,7 @@
         (when (is-pyth a b c)
           (display-triple a b c))))))
   
-(get-pythagorean 35)
+(get-pythagorean 30)
 ;(is-pyth 3 4 5)
         
   

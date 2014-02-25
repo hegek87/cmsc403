@@ -77,9 +77,33 @@ fun 	mergesort [] = [] |
 			merge (mergesort front) (mergesort back)
 		end;
 		
+(* 3.8 (g) *)
+fun is_pyth x y z = x*x+y*y=z*z;
 
-	
+fun print_pyth x y z = (
+	output(stdOut, "(");
+	output(stdOut, Int.toString x);
+	output(stdOut, ", ");
+	output(stdOut, Int.toString y);
+	output(stdOut, ", ");
+	output(stdOut, Int.toString z);
+	output(stdOut, ")\n")
+);
+
+
+fun gen_pyth x y z n = (
+	if is_pyth x y z then print_pyth x y z else output(stdOut, "");
+	if x = n then output(stdOut,"")
+	else if y = n then gen_pyth (x+1) (x+1) z n
+	else if z = n then gen_pyth x (y+1) (y+1) n
+	else gen_pyth x y (z+1) n
+);
+
+fun pyth_trip n = gen_pyth 1 1 1 n;
+
 	
 (* 3.8 (h) *)
 fun twice f = fn x => f(f(x));
 fun square x = x*x;
+
+(* As in the previous assignment, twice square = x^4, and so twice twice square = x^16 *)
