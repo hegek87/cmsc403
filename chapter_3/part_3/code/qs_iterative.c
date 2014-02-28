@@ -40,47 +40,50 @@ void printArr(int *x, int len){
 
 
 void merge(int *to_sort, int start, int mid, int end){
-	int *copy_left = malloc((mid-start)*sizeof(int));
-	int *copy_right = malloc((end-mid)*sizeof(int));
-	memcpy(copy_left, to_sort+start, (mid-start)*sizeof(int));
-	memcpy(copy_right, to_sort+mid, (end-mid)*sizeof(int));
-	int i,j,k;
-	for(i = start, j = 0, k = 0; i < end; ++i){
-		if(*(copy_left+j) < *(copy_right+k) && j < mid-start){
-			*(to_sort+i) = *(copy_left+j++);
+	int l_len = mid-start+1, r_len = end-mid;
+	
+	int left_copy[l_len], right_copy[r_len];
+	int i;
+	for(i = 0; i < l_len; ++i){
+		left_copy[i] = *(to_sort+start+i);
+	}
+	for(i = 0; i < r_len; ++i){
+		right_copy[i] = *(to_sort+mid+i+1);
+	}
+	
+	int j,k;
+	for(i = 0, j = 0, k = start; k <= end; ++k){
+		if(j >= r_len){
+			*(to_sort+k) = left_copy[i++];
+		}
+		else if(i >= l_len){
+			*(to_sort+k) = right_copy[j++];
+		}
+		else if(left_copy[i] < right_copy[j]){
+			*(to_sort+k) = left_copy[i++];
 		}
 		else{
-			*(to_sort+i) = *(copy_right+k++);
+			*(to_sort+k) = right_copy[j++];
 		}
 	}
-	free(copy_left);
-	free(copy_right);
 }
 	
 
 
 void mergesort(int *to_sort, int start, int end){
-	int half;
 	if(start < end){
-		half = start + ((end+start)/2);
+		int half = (start+end)/2;
 		mergesort(to_sort, start, half);
-		mergesort(to_sort, half, end);
+		mergesort(to_sort, half+1, end);
+		merge(to_sort, start, half, end);
 	}
-	
-	merge(to_sort, start, half, end);
 }
 
 
 int main(void){
-	int x[] = {1,5,2,4,10,24,5,2345,235,135,135,52,421,16,15};
-	printArr(x,15);
-	//partition(x,0,7);
-	//printArr(x,7);
-	quicksort(x, 0, 15);
-	printArr(x,15);
-	int y[] = {3,5,7,9,11,1,4,6,8,12};
-	printArr(y, 10);
-	merge(y, 0, 5, 10);
-	printArr(y,10);
+	int x[] = {10,9,8,7,6,5,4,3,2,1};
+	printArr(x,10);
+	mergesort(x,0, 9);
+	printArr(x,10);
 	return 0;
 }
