@@ -79,8 +79,76 @@ void mergesort(int *to_sort, int start, int end){
 	}
 }
 
+void destroy_node(struct Node *to_die){
+	//free(to_die->x);
+	free(to_die);
+}
+
+struct Node *create_node(int *val){
+	struct Node *ret = create_empty_node();
+	ret->x = val;
+	return ret;
+}
+
+struct Node *create_empty_node(){
+	return malloc(sizeof(struct Node));
+}
+
+struct Stack *create_stack(){
+	struct Stack *st = malloc(sizeof(struct Stack));
+	st->size = 0;
+	st->top = NULL;
+	return st;
+}
+	
+	
+void destroy_stack(struct Stack *st){
+	while(!stack_empty(*st)){
+		int *x = malloc(sizeof(int));
+		stack_pop(st, x);
+		free(x);
+	}
+	free(st);
+}
+
+int stack_pop(struct Stack *st, int *val){
+	if(stack_empty(*st)){
+		return -1;
+	}
+	st->size--;
+	struct Node *top = st->top;
+	st->top = st->top->next;
+	*val = *top->x;
+	destroy_node(top);
+	return 1;
+}
+
+void stack_push(struct Stack *st, int val){
+	struct Node *new_top = create_node(&val);
+	if(!stack_empty(*st)){
+		new_top->next = st->top;
+		st->top->next = new_top;
+		st->size++;
+		return;
+	}
+	st->top = new_top;
+	st->size++;
+}
+	
+int stack_empty(struct Stack st){ return !st.size; }
+
 
 int main(void){
+	struct Stack *test = create_stack();
+	int a,y,z;
+	stack_push(test,10);
+	stack_push(test,11);
+	stack_push(test,12);
+	stack_pop(test,&a);
+	stack_pop(test,&y);
+	printf("A: %d\tY: %d\n", a,y);
+	//stack_pop(test,&z);
+	//destroy_stack(test);
 	int x[] = {10,9,8,7,6,5,4,3,2,1};
 	printArr(x,10);
 	mergesort(x,0, 9);
