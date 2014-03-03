@@ -37,6 +37,8 @@ void printArr(int *x, int len){
 	printf("\n");
 }
 
+int min(int x, int y){ return (x<y) ? x : y; }
+
 
 void merge(int *to_sort, int start, int mid, int end){
 	int l_len = mid-start+1, r_len = end-mid;
@@ -78,6 +80,70 @@ void mergesort(int *to_sort, int start, int end){
 	}
 }
 
+void stack_mergesort(int *to_sort, int len){
+	int SORTED = -1;
+	int UNSORTED = 0;
+	int start = 0, end = len-1;
+	struct Stack *st = create_stack();
+	stack_push(st, &start);
+	stack_push(st, &end);
+	stack_push(st, &UNSORTED);
+	
+	while(!stack_empty(*st)){
+		int ready = *stack_pop(st);
+		end = *stack_pop(st);
+		start = *stack_pop(st);
+		//int *z = stack_pop(st);
+		//printf("Z:%d\n", z? *z : z);
+		printf("POPPING:\t%d,\t%d,\t%d\n", start,end,ready);
+		if(ready){
+			int mid = (start+end)/2;
+			merge(to_sort, start, mid, end);
+		}
+		else{
+			if(start < end){
+				int mid = (start+end)/2;
+				stack_push(st, &start);
+				stack_push(st, &end);
+				stack_push(st, &SORTED);
+				
+				stack_push(st, &start);
+				stack_push(st, &mid);
+				stack_push(st, &UNSORTED);
+				
+				int p = mid+1;
+				stack_push(st, &p);
+				stack_push(st, &end);
+				stack_push(st, &UNSORTED);
+			}
+		}	
+	}
+}
+/*
+void stack_mergesort(int *to_sort, int len){
+	int cur,i;
+	for(cur = 1; cur < len; cur*=2){
+		printf("CUR: %d\n", cur);
+		for(i = 0; cur*i < len; ++i){
+			int end = min(cur*i+cur,len);
+			printf("MERGING: %d\t%d\t%d\n",cur*i,(cur*i+end)/2,end);
+			//printf("START: %d\tEND: %d\tSUM: %d\n", 2*i, end, (2*i+end)/2);
+			merge(to_sort,cur*i,(cur*i+end)/2,end);
+		}
+	}
+}*/
+	/*
+	merge(z,0,0,1);
+	merge(z,2,2,3);
+	merge(z,4,4,5);
+	merge(z,6,6,7);
+	printArr(z,7);
+	merge(z,0,1,3);
+	merge(z,4,5,7);
+	printArr(z,7);
+	merge(z,0,3,7);
+	printArr(z,7);
+	*/
 /*
 void stack_mergesort(int *to_sort, int len){
 	int half = len / 2, cur = 1, i;
@@ -155,6 +221,7 @@ int *stack_pop(struct Stack *st){
 	int *val = top->x;
 	st->top = st->top->next;
 	destroy_node(top);
+	//printf("VAL BEING POPPED: %d\n", *val);
 	return val;
 }
 
@@ -188,5 +255,28 @@ int main(void){
 	printArr(x,10);
 	stack_quicksort(x,10);
 	printArr(x,10);
+	int z[] = {8,7,6,5,4,3,2,1};
+	printArr(z,8);
+	/*
+	int i;
+	for(i = 0; i < 500; ++i){
+		stack_push(test,&i);
+	}
+	for(i = 0; i < 500; ++i){
+		printf("VAL: %d\n", *stack_pop(test));
+	}*/
+	
+	stack_mergesort(z,8);
+	/*
+	merge(z,0,0,1);
+	merge(z,2,2,3);
+	merge(z,4,4,5);
+	merge(z,6,6,7);
+	printArr(z,8);
+	merge(z,0,1,3);
+	merge(z,4,5,7);
+	printArr(z,8);
+	merge(z,0,3,7);*/
+	printArr(z,8);
 	return 0;
 }

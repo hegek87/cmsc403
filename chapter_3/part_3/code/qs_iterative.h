@@ -31,4 +31,5 @@ int stack_empty(struct Stack);
 
 void stack_mergesort(int *,int);
 void stack_quicksort(int *,int);
+int min(int,int);
 #endif
