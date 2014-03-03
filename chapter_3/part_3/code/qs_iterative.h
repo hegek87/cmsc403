@@ -30,4 +30,5 @@ void stack_push(struct Stack *, int *);
 int stack_empty(struct Stack);
 
 void stack_mergesort(int *,int);
+void stack_quicksort(int *,int);
 #endif

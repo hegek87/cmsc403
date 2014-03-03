@@ -8,26 +8,25 @@ void swap(int *x, int *y){
 	*x = *y;
 	*y = temp;
 }
+	
 
 void quicksort(int to_sort[], int begin, int end){
-	if(begin >= end){ return; }
-	int part = partition(to_sort, begin, end);
-	quicksort(to_sort, begin, part);
-	quicksort(to_sort, part+1, end);
-	return;
+	if(begin < end){
+		int part = partition(to_sort, begin, end);
+		quicksort(to_sort, begin, part-1);
+		quicksort(to_sort, part+1, end);
+	}
 }
 
 int partition(int to_sort[], int begin, int end){
-	int p = begin-1, i = begin;
+	int p = begin-1, i;
 	for(i = begin; i < end; ++i){
-		if(to_sort[i] > to_sort[end-1]){
-			continue;
-		}
-		else{
+		if(to_sort[i] <= to_sort[end]){
 			swap(&to_sort[i], &to_sort[++p]);
 		}
 	}
-	return p;
+	swap(&to_sort[p+1],&to_sort[end]);
+	return p+1;
 }
 
 void printArr(int *x, int len){
@@ -79,19 +78,43 @@ void mergesort(int *to_sort, int start, int end){
 	}
 }
 
+/*
 void stack_mergesort(int *to_sort, int len){
 	int half = len / 2, cur = 1, i;
 	struct Stack *st = create_stack();
 	for(i = 0; i < len; ++i){
 		stack_push(st, to_sort+i);
 	}
-	while(cur < half){
-		while(!stack_empty(*st)){
-			i = 0;
-			
-			// Get first cur elements
-			int front[cur], back[cur];
-			while(!stack_empty(*st) && 
+}
+*/
+void stack_quicksort(int *to_sort, int len){
+	int start = 0, end = len-1;
+	struct Stack *st = create_stack();
+	stack_push(st, &start);
+	stack_push(st, &end);
+	while(!stack_empty(*st)){
+		// Get top and bottom elements
+		end = *stack_pop(st);
+		start = *stack_pop(st);
+		
+		// Find partition
+		int part = partition(to_sort, start, end);
+		
+		// We aren't done, push top and bottom of left side
+		if(part - 1 > start){
+			int p = part-1;
+			stack_push(st, &start);
+			stack_push(st, &p);
+		}
+		// We aren't done, push top and bottom of right side
+		if(part+1 < end){
+			int p = part+1;
+			stack_push(st, &p);
+			stack_push(st, &end);
+		}
+	}	
+}
+		
 			
 
 void destroy_node(struct Node *to_die){
@@ -163,7 +186,7 @@ int main(void){
 	destroy_stack(test);
 	int x[] = {10,9,8,7,6,5,4,3,2,1};
 	printArr(x,10);
-	mergesort(x,0, 9);
+	stack_quicksort(x,10);
 	printArr(x,10);
 	return 0;
 }
