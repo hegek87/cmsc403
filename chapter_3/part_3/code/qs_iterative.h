@@ -28,6 +28,7 @@ void destroy_stack(struct Stack *);
 int *stack_pop(struct Stack *);
 void stack_push(struct Stack *, int *);
 int stack_empty(struct Stack);
+void print_stack(struct Stack);
 
 void stack_mergesort(int *,int);
 void stack_quicksort(int *,int);
